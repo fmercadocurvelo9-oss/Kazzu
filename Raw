@@ -1,0 +1,48 @@
+
+
+
+local function desincronizar()
+    local tiempo_desincronizado = 10 -- Tiempo en segundos
+    local tiempo_inicio = tick()
+
+    while tick() - tiempo_inicio < tiempo_desincronizado do
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoid = character:WaitForChild("Humanoid")
+
+        -- Detener el movimiento del jugador
+        humanoid:MoveTo(character.HumanoidRootPart.Position)
+        wait(0.1) 
+    end
+end
+
+local function atravesar_objetos()
+    local player = game.Players.LocalPlayer
+    local character = player.Character or player.CharacterAdded:Wait()
+    local humanoid = character:WaitForChild("Humanoid")
+
+    while true do
+        for _, part in ipairs(workspace:GetChildren()) do
+            if part:IsA("BasePart") and part.Name ~= "Floor" then
+                part.CanCollide = false
+                part.Transparency = 0.5
+            end
+        end
+
+        wait(0.1) -- Esperar 0.1 segundos para evitar detección
+    end
+end
+
+-- Función para hacer la interfaz movable
+local function interfaz_movable()
+    local ui = game:GetService("CoreGui"):FindFirstChild("PlayerGui")
+    if ui then
+        ui.Draggable = true
+        ui.Active = true 
+    end
+end
+
+
+desincronizar()
+atravesar_objetos()
+interfaz_movable()
